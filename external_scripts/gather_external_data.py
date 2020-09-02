@@ -11,8 +11,8 @@ ga_data_dir = 'Irish-BERT/data/ga'
 ga_full_path = os.path.join(user, ga_data_dir)
 wiki_bert_path = os.path.join(user, "wiki-bert-pipeline")
 
-# replace 'wikipedia-texts' dir with 'irish-texts' which is a combination of all texts
-target_data_path = os.path.join(wiki_bert_path, 'data', 'ga', 'irish-texts')
+# replace 'wikipedia-texts' dir with 'ga-texts' which is a combination of all ga texts
+target_data_path = os.path.join(wiki_bert_path, 'data', 'ga', 'ga-texts')
 if not os.path.exists(target_data_path):
     print(f"Creating target directory at: {target_data_path}")
     os.makedirs(target_data_path)

@@ -18,6 +18,9 @@ fi
 
 mkdir -p "$WIKI_TEXT_DIR"
 
+# also make a corpus-agnostic directory for the language
+mkdir -p "$LC_TEXT_DIR"
+
 count=$(find "$WIKI_TEXT_DIR" -type f | wc -l | perl -pe 's/\s//g')
 
 if [ $count -gt 0 ]; then
@@ -32,4 +35,8 @@ else
 	    --output "$WIKI_TEXT_DIR" \
 	    --compress \
 	    "$WIKI_DUMP_PATH"
+
+    # copy all of the wikipedia files to a general corpora directory
+    echo "copying output Wikipedia files from $WIKI_TEXT_DIR to $LC_TEXT_DIR..." 
+    find $WIKI_TEXT_DIR -maxdepth 2 -type f | xargs -I {} cp -v {} $LC_TEXT_DIR;
 fi

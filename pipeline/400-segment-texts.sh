@@ -5,16 +5,16 @@
 PIPELINE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 source "$PIPELINE_DIR/common.sh"
 
-count=$(find "$WIKI_TEXT_DIR" -type f | wc -l | perl -pe 's/\s//g')
+count=$(find "$LC_TEXT_DIR" -type f | wc -l | perl -pe 's/\s//g')
 
 if [ $count -eq 0 ]; then
-    error_exit "no files in $WIKI_TEXT_DIR"
+    error_exit "no files in $LC_TEXT_DIR"
 else
-    echo "$SCRIPT: processing $count files in $WIKI_TEXT_DIR"
+    echo "$SCRIPT: processing $count files in $LC_TEXT_DIR"
 fi
 
-find "$WIKI_TEXT_DIR" -type f | sort | while read f; do
-    relpath=$(relative_path "$f" "$WIKI_TEXT_DIR")
+find "$LC_TEXT_DIR" -type f | sort | while read f; do
+    relpath=$(relative_path "$f" "$LC_TEXT_DIR")
     reldir=$(dirname "$relpath")
     outdir="$TOKENIZED_TEXT_DIR/$reldir"
     outbase=$(echo $(basename "$f") | perl -pe 's/\..*//')
