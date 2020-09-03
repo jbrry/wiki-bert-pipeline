@@ -19,11 +19,11 @@ if not os.path.exists(target_data_path):
 
 
 if os.path.exists(ga_full_path):
-    print(f"Using Irish data directory at location: {ga_full_path}")
     for corpus in os.listdir(ga_full_path):
         if corpus in external_corpora:
             data_path = os.path.join(ga_full_path, corpus)
-
+            print(f"Copying Irish data from: {data_path}")
+            
             for f in os.listdir(data_path):
                 # if the file is a compressed file which has already been downloaded
                 # copy it to the target directory
