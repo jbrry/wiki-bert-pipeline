@@ -1,27 +1,27 @@
 import os
 import sys
-
 from shutil import copyfile
 
 # directory names of corpora which have been downloaded
-external_corpora = ['conll17', 'gdrive', 'oscar']
+external_corpora = ['conll17', 'gdrive', 'oscar-unshuffled', 'opus']
 
 user = os.path.expanduser('~')
-ga_data_dir = 'Irish-BERT/data/ga'
-ga_full_path = os.path.join(user, ga_data_dir)
-wiki_bert_path = os.path.join(user, "wiki-bert-pipeline")
+ga_bert_dir = os.path.join(user, 'ga_BERT')
+ga_data_dir = os.path.join(ga_bert_dir, 'Irish-BERT/data/ga')
+wiki_bert_path = os.path.join(ga_bert_dir, "wiki-bert-pipeline")
 
 # replace 'wikipedia-texts' dir with 'ga-texts' which is a combination of all ga texts
 target_data_path = os.path.join(wiki_bert_path, 'data', 'ga', 'ga-texts')
 if not os.path.exists(target_data_path):
-    print(f"Creating target directory at: {target_data_path}")
+    print(f"Creating directory at: {target_data_path}")
     os.makedirs(target_data_path)
 
-
-if os.path.exists(ga_full_path):
-    for corpus in os.listdir(ga_full_path):
+if os.path.exists(ga_data_dir):
+    print(f"Found directory containing Irish files at {ga_data_dir}")
+    for corpus in os.listdir(ga_data_dir):
+        print(f"Found {corpus}")
         if corpus in external_corpora:
-            data_path = os.path.join(ga_full_path, corpus)
+            data_path = os.path.join(ga_data_dir, corpus)
             print(f"Copying Irish data from: {data_path}")
             
             for f in os.listdir(data_path):
@@ -32,5 +32,5 @@ if os.path.exists(ga_full_path):
                     target_file = os.path.join(target_data_path, f)
                     copyfile(original_file, target_file)
 else:
-    print(f"Could not find Irish data directory, tried: {ga_full_path}")
+    print(f"Could not find Irish data directory, tried: {ga_data_dir}")
 
