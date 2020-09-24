@@ -3,15 +3,12 @@ import sys
 from shutil import copyfile
 
 # directory names of corpora which have been downloaded
-external_corpora = ['conll17', 'gdrive', 'oscar-unshuffled', 'opus']
+external_corpora = ['conll17', 'gdrive', 'oscar', 'opus']
 
-user = os.path.expanduser('~')
-ga_bert_dir = os.path.join(user, 'ga_BERT')
-ga_data_dir = os.path.join(ga_bert_dir, 'Irish-BERT/data/ga')
-wiki_bert_path = os.path.join(ga_bert_dir, "wiki-bert-pipeline")
+ga_data_dir = os.path.join('..', 'Irish-BERT/data/ga')
 
 # replace 'wikipedia-texts' dir with 'ga-texts' which is a combination of all ga texts
-target_data_path = os.path.join(wiki_bert_path, 'data', 'ga', 'ga-texts')
+target_data_path = os.path.join('data', 'ga', 'ga-texts')
 if not os.path.exists(target_data_path):
     print(f"Creating directory at: {target_data_path}")
     os.makedirs(target_data_path)
@@ -21,13 +18,18 @@ if os.path.exists(ga_data_dir):
     for corpus in os.listdir(ga_data_dir):
         print(f"Found {corpus}")
         if corpus in external_corpora:
+
+            if corpus == "gdrive":
+                corpus += "/gathered"
+
             data_path = os.path.join(ga_data_dir, corpus)
             print(f"Copying Irish data from: {data_path}")
             
             for f in os.listdir(data_path):
                 # if the file is a compressed file which has already been downloaded
                 # copy it to the target directory
-                if f.endswith(".bz2"):
+                if f.endswith(".bz2") or f.endswith(".gz"):
+                    print(f"found file {f}")
                     original_file = os.path.join(data_path, f)
                     target_file = os.path.join(target_data_path, f)
                     copyfile(original_file, target_file)
