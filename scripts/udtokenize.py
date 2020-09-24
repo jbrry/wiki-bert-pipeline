@@ -88,14 +88,14 @@ def tokenize_stream(pipeline, f, fn, options):
 
 def tokenize(pipeline, fn, options):
     if fn.endswith('.gz'):
-        with gzip.open(fn, 'rt', encoding=options.encoding) as f:
+        with gzip.open(fn, 'rt', encoding=options.encoding, errors='ignore') as f:
             return tokenize_stream(pipeline, f, fn, options)
     elif fn.endswith('.bz2'):
-        with bz2.open(fn, 'rt', encoding=options.encoding) as f:
+        with bz2.open(fn, 'rt', encoding=options.encoding, errors='ignore') as f:
             return tokenize_stream(pipeline, f, fn, options)
     else:
         with open(fn) as f:
-            return tokenize_stream(pipeline, f, fn, options)
+            return tokenize_stream(pipeline, f, fn, options, errors='ignore')
 
 
 def main(argv):
