@@ -22,7 +22,7 @@ if os.path.exists(ga_data_dir):
     for corpus in os.listdir(ga_data_dir):
         if corpus in external_corpora:
             print(f"Found {corpus}")
-            file_path = corpus + "/processed"
+            file_path = corpus + "/filtered"
 
             data_path = os.path.join(ga_data_dir, file_path)
             print(f"Copying Irish data from: {data_path}")
