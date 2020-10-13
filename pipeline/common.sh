@@ -30,6 +30,7 @@ BASE_DIR=$(pwd_relative_path "$PIPELINE_DIR/..")
 LANGUAGE_DATA_DIR=$(pwd_relative_path "$BASE_DIR/languages")
 SCRIPT_DIR=$(pwd_relative_path "$BASE_DIR/scripts")
 DATA_DIR=$(pwd_relative_path "$BASE_DIR/data")
+MULTILINGUAL_BERT_DIR=$(pwd_relative_path "$BASE_DIR/multilingual_bert/multi_cased_L-12_H-768_A-12")
 CONFIG_DIR=$(pwd_relative_path "$BASE_DIR/config")
 
 if [ ! -e "$LANGUAGE_DATA_DIR/$LC.json" ]; then
@@ -62,7 +63,7 @@ source "$CONFIG_DIR/filter.sh"
 
 SAMPLED_TEXT_DIR="$DATA_DIR/$LC/sampled-texts"
 SAMPLED_TEXT_PATH="$SAMPLED_TEXT_DIR/sampled-sentences.txt"
-SAMPLED_SENTENCE_NUM=10000000
+SAMPLED_SENTENCE_NUM=1000000000
 
 BASICTOKENIZE="$SCRIPT_DIR/basictokenize.py"
 TOKENIZED_SAMPLE_DIR="$DATA_DIR/$LC/tokenized-samples"
@@ -75,12 +76,12 @@ SENTENCEPIECE="$SCRIPT_DIR/spmtrain.py"
 source "$CONFIG_DIR/sentencepiece.sh"
 
 WORDPIECE_VOCAB_DIR="$DATA_DIR/$LC/wordpiece/cased"
-WORDPIECE_VOCAB_PATH="$WORDPIECE_VOCAB_DIR/vocab.txt"
+WORDPIECE_VOCAB_PATH="$MULTILINGUAL_BERT_DIR/vocab.txt"
 SENT2WORDPIECE=$(pwd_relative_path "$BASE_DIR/sent2wordpiece/sent2wordpiece.py")
 SENT2WORDPIECE_PARAMS=""
 
-TFRECORD_DIR_128="$DATA_DIR/$LC/tfrecords/seq-128"
-TFRECORD_DIR_512="$DATA_DIR/$LC/tfrecords/seq-512"
+TFRECORD_DIR_128="$DATA_DIR/$LC/tfrecords-multilingual_bert/seq-128"
+TFRECORD_DIR_512="$DATA_DIR/$LC/tfrecords-multilingual_bert/seq-512"
 CREATE_TFRECORD="$BASE_DIR/bert/create_pretraining_data.py"
 source "$CONFIG_DIR/tfrecord.sh"
 
