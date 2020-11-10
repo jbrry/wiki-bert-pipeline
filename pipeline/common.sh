@@ -46,7 +46,7 @@ WIKI_DUMP_PATH="$WIKI_DUMP_DIR/$(basename $WIKI_DUMP_URL)"
 
 WIKIEXTRACTOR="$BASE_DIR/wikiextractor/WikiExtractor.py"
 WIKI_TEXT_DIR="$DATA_DIR/$LC/wikipedia-texts"
-LC_TEXT_DIR="$DATA_DIR/$LC/$LC-texts"
+EXTERNAL_CORPORA_DIR=""
 
 UDPIPE_MODEL_URL=$(get_language_attribute "$LC" "udpipe-model")
 UDPIPE_MODEL_DIR="$DATA_DIR/$LC/udpipe-model"
