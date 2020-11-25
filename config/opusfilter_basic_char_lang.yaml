@@ -1,0 +1,47 @@
+# default config with character and language filters
+# these values will be overwritten by scripts/opusfilter.py
+
+common:
+
+  output_directory: 
+
+steps:
+
+  - type: filter
+    parameters:
+      inputs: []
+      outputs: []
+      filters:
+        - LengthFilter:
+            unit: word
+            min_length: 1
+            max_length: 100
+
+        - LongWordFilter:
+            threshold: 40
+
+        - HtmlTagFilter: {}
+
+        - CharacterScoreFilter:
+            scripts: [Latin]
+            thresholds: [0]
+
+        - LanguageIDFilter:
+            name: langid
+            id_method: langid
+            languages: [ga]
+            thresholds: [0]
+
+        - LanguageIDFilter:
+            name: cld2
+            id_method: cld2
+            languages: [ga]
+            thresholds: [0]
+
+        - PunctuationFilter:
+            threshold: 0.6
+          module: customfilters
+
+        - DigitsFilter:
+            threshold: 0.6
+          module: customfilters

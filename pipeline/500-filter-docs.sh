@@ -3,7 +3,9 @@
 # Run heuristic document-level filtering.
 
 PIPELINE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-source "$PIPELINE_DIR/common.sh"
+
+RUN=$2
+source "$PIPELINE_DIR/common_$RUN.sh"
 
 count=$(find "$TOKENIZED_TEXT_DIR" -type f | wc -l | perl -pe 's/\s//g')
 
@@ -23,8 +25,26 @@ find "$TOKENIZED_TEXT_DIR" -type f | sort | while read f; do
     if [ -s "$outpath" ]; then
 	echo "$SCRIPT: $outpath exists, skipping $f ." >&2
     else
+
+    corpus=$(echo $outbase | awk -F "_" '{print $1}')
+    echo "processing corpus: $corpus"
 	echo "$SCRIPT: filtering $f to $outpath ..." >&2
-	echo "$SCRIPT: running $DOC_FILTER" $DOC_FILTER_PARAMS >&2
-	python3 "$DOC_FILTER" $DOC_FILTER_PARAMS "$f" > "$outpath"
+    
+    if [ "$corpus" == "wiki" ] || [ "$corpus" == "NCI" ]; then
+        echo "$SCRIPT: running $DOC_FILTER" $DOC_FILTER_PARAMS >&2
+	    python3 "$DOC_FILTER" $DOC_FILTER_PARAMS "$f" > "$outpath"
+    else
+        # get the filtering type from the last string in the metadata
+        OPUSFILTER_TYPE=$(echo $RUN | awk -F "_" '{print $NF}')
+        echo "$SCRIPT: running $OPUSFILTER_WRAPPER" $OPUSFILTER_TYPE $f >&2
+        mkdir -p $OPUSFILTER_CONFIG_DIR
+        python3 "$OPUSFILTER_WRAPPER" $OPUSFILTER_TYPE $f $OPUSFILTER_CONFIG_DIR $outpath
+        sleep 10
+    fi
+
+
+    
+    
+    
     fi
 done

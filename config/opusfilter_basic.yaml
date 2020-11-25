@@ -1,0 +1,31 @@
+# default basic config
+# these values will be overwritten by scripts/opusfilter.py
+
+common:
+
+  output_directory: 
+
+steps:
+
+  - type: filter
+    parameters:
+      inputs: []
+      outputs: []
+      filters:
+        - LengthFilter:
+            unit: word
+            min_length: 1
+            max_length: 100
+
+        - LongWordFilter:
+            threshold: 40
+
+        - HtmlTagFilter: {}
+
+        - PunctuationFilter:
+            threshold: 0.6
+          module: customfilters
+
+        - DigitsFilter:
+            threshold: 0.6
+          module: customfilters

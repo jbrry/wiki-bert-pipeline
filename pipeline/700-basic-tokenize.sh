@@ -3,7 +3,8 @@
 # Perform BERT basic tokenization.
 
 PIPELINE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-source "$PIPELINE_DIR/common.sh"
+RUN=$2
+source "$PIPELINE_DIR/common_$RUN.sh"
 
 mkdir -p "$TOKENIZED_SAMPLE_DIR"
 

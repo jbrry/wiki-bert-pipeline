@@ -3,7 +3,9 @@
 # Download UDPipe model for given language.
 
 PIPELINE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-source "$PIPELINE_DIR/common.sh"
+
+RUN=$2
+source "$PIPELINE_DIR/common_$RUN.sh"
 
 mkdir -p "$UDPIPE_MODEL_DIR"
 

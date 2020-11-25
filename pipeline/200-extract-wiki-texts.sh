@@ -3,7 +3,8 @@
 # Extract texts from Wikipedia dump data for given language.
 
 PIPELINE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-source "$PIPELINE_DIR/common.sh"
+RUN=$2
+source "$PIPELINE_DIR/common_$RUN.sh"
 
 IGNORED_TAGS="abbr,b,big,blockquote,br,center,cite,em,font,h1,h2,h3,h4,hiero,hr,i,kbd,nowiki,p,plaintext,poem,ref,s,span,strike,strong,sub,sup,tt,u,var"
 

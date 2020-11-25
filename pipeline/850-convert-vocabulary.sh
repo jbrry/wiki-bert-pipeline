@@ -3,7 +3,8 @@
 # Convert sentencepiece to wordpiece vocabulary.
 
 PIPELINE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-source "$PIPELINE_DIR/common.sh"
+RUN=$2
+source "$PIPELINE_DIR/common_$RUN.sh"
 
 if [ ! -s $SENTENCEPIECE_VOCAB_PATH ]; then
     error_exit "$SENTENCEPIECE_VOCAB_PATH does not exist"

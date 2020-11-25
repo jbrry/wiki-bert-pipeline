@@ -27,9 +27,10 @@ def argparser():
         choices={
             'none',
             'basic',
-            'basic_0.5',
-            'basic_0.8',
+            'basic+char-@+lang-@',
             })
+    parser.add_argument('--char-filter-threshold', type=str, help="filter threshold to apply for character script, e.g. 0.5")
+    parser.add_argument('--lang-filter-threshold', type=str, help="filter threshold to apply for language ID, e.g. 0.5")
     parser.add_argument('--input-type', type=str,
         choices={
             'raw',
@@ -42,18 +43,35 @@ def argparser():
 def main(argv):
     args = argparser().parse_args(argv[1:])
     corpora_string = "_".join(args.datasets)
-    run_string = f'{corpora_string}_filtering_{args.filter_type}'
+
+    parts = args.filter_type.split("+")
+    print(parts)
+    new_parts = []
+    for part in parts:
+        if "char" in part:
+            if args.char_filter_threshold:
+                part = part.replace("@", args.char_filter_threshold)
+                new_parts.append(part)
+        elif "lang" in part:
+            if args.lang_filter_threshold:
+                part = part.replace("@", args.lang_filter_threshold)
+                new_parts.append(part)
+        else:
+            new_parts.append(part)
+
+    filter_string = "+".join(new_parts)
+    print(filter_string)
+
+    run_string = f'{corpora_string}_filtering_{filter_string}'
     print(f"copying data for run: {run_string}")
 
     ga_data_dir = os.path.join('..', 'Irish-BERT/data/ga')
-
     target_data_path =  os.path.join('data', run_string, 'ga', 'external-texts')
     if not os.path.exists(target_data_path):
         print(f"Creating directory at: {target_data_path}")
         os.makedirs(target_data_path)
 
-    
-    data_path = f'DATA_DIR=$(pwd_relative_path "$BASE_DIR/data/{corpora_string}_filtering_{args.filter_type}")'
+    data_path = f'DATA_DIR=$(pwd_relative_path "$BASE_DIR/data/{corpora_string}_filtering_{filter_string}")'
     external_path = f'EXTERNAL_CORPORA_DIR="$DATA_DIR/ga/external-texts"'
 
     # take the default config file and alter it based on the specific data/filtering type.
@@ -63,10 +81,11 @@ def main(argv):
     print(f"creating config: {SPECIFIC_CONFIG}")
     copyfile(DEFAULT_CONFIG, SPECIFIC_CONFIG)
 
+    # change default environment paths
     for line in fileinput.input(SPECIFIC_CONFIG, inplace=1):
         new_line_symbol = line.rfind('\n')
         line = line[:new_line_symbol]
-        # replace placeholder data dir with specific data dir
+        # replace placeholder data dir with run-specific data dir
         if line == 'DATA_DIR=$(pwd_relative_path "$BASE_DIR/data")':
             line = line.replace(line, data_path)
             print(line)
@@ -101,6 +120,10 @@ def main(argv):
                         copied_files += 1
 
                 print(f"copied {(copied_files / found_files) * 100}% of files for {corpus}")
+
+        # launch script
+        run_script=f"/home/jbarry/spinning-storage/jbarry/ga_BERT/wiki-bert-pipeline/RUN.sh" # TODO don't use user-specific location
+        rcmd = subprocess.call(run_script + " ga" + " " + run_string, shell=True)
     else:
         print(f"Could not find Irish data directory, tried: {ga_data_dir}")
 

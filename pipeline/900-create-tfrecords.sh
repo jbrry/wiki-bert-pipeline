@@ -6,7 +6,8 @@
 # script to generate records for all texts (instead of filtered).
 
 PIPELINE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-source "$PIPELINE_DIR/common.sh"
+RUN=$2
+source "$PIPELINE_DIR/common_$RUN.sh"
 
 count=$(find "$DOC_FILTERED_DIR" -type f | wc -l | perl -pe 's/\s//g')
 
@@ -16,7 +17,8 @@ else
     echo "$SCRIPT: processing $count files in $DOC_FILTERED_DIR"
 fi
 
-for seq_len in 128 512; do
+#or seq_len in 128 512; do
+for seq_len in 128; do
     find "$DOC_FILTERED_DIR" -type f | sort | while read f; do
 	relpath=$(relative_path "$f" "$DOC_FILTERED_DIR")
 	reldir=$(dirname "$relpath")

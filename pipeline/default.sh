@@ -4,11 +4,12 @@
 
 set -euo pipefail
 
-if [ "$#" -ne 1 ]; then
-    echo "Usage: $0 LC" >&2
-    echo "    where LC is a two-character language code (e.g. \"en\")" >&2
+if [ "$#" -ne 2 ]; then
+    echo "Usage: $0 LC RUN" >&2
+    echo "    where LC is a two-character language code (e.g. \"en\") RUN" >&2
     exit 1
 fi
+
 
 LC="$1"
 
@@ -58,8 +59,11 @@ TOKENIZER="$SCRIPT_DIR/udtokenize.py"
 TOKENIZED_TEXT_DIR="$DATA_DIR/$LC/tokenized-texts"
 
 DOC_FILTER="$SCRIPT_DIR/filterdocs.py"
+OPUSFILTER_WRAPPER="$SCRIPT_DIR/opusfilter.py"
 DOC_FILTER_WORD_CHARS=$(get_language_attribute "$LC" "word-chars")
 DOC_FILTERED_DIR="$DATA_DIR/$LC/filtered-texts"
+# DIR to write opusfilter configs
+OPUSFILTER_CONFIG_DIR="$DATA_DIR/$LC/opusfilter-configs"
 source "$CONFIG_DIR/filter.sh"
 
 SAMPLED_TEXT_DIR="$DATA_DIR/$LC/sampled-texts"

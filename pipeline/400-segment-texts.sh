@@ -3,7 +3,9 @@
 # Tokenize texts for given language.
 
 PIPELINE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-source "$PIPELINE_DIR/common.sh"
+
+RUN=$2
+source "$PIPELINE_DIR/common_$RUN.sh"
 
 count=$(find "$EXTERNAL_CORPORA_DIR" -type f | wc -l | perl -pe 's/\s//g')
 

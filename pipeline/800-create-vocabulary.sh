@@ -3,7 +3,8 @@
 # Create sentencepiece model for given language.
 
 PIPELINE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-source "$PIPELINE_DIR/common.sh"
+RUN=$2
+source "$PIPELINE_DIR/common_$RUN.sh"
 
 if [ ! -s "$TOKENIZED_SAMPLE_PATH" ]; then
     error_exit "$TOKENIZED_SAMPLE_PATH does not exist"
