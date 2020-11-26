@@ -7,6 +7,7 @@ import os
 """Wraps opusfilter to take in a default configuration, edit some of the parameters and run the filter."""
 
 # Default OpusFilter configs with placeholder values.
+# the basic config does not contain any character script or language filters.
 OPUSFILTER_CONFIGS = {
                         "None": None,
                         "basic": "config/opusfilter_basic.yaml",
@@ -17,8 +18,8 @@ OPUSFILTER_CONFIGS = {
 def replace_default_config(SPECIFIC_CONFIG,
                             input_directory,
                             file_name,
-                            char_filter_threshold,
-                            lang_filter_threshold):
+                            char_filter_threshold=None,
+                            lang_filter_threshold=None):
 
     """Takes a default configuration file and uses `fileinput` to replace lines based on the current configuration.
     
@@ -82,22 +83,32 @@ run, file_in, config_path, out_path = sys.argv[1:]
 # find the appropriate template configuration
 parts = run.split("+")
 print(parts)
-# basic filtering with character and language filters
-if "char" or "lang" in parts:
-    # basic is a superset of char and lang filters and we always use char and lang filters together
-    # but you could create your own default config and adjust this script accordingly.
-    DEFAULT_CONFIG = OPUSFILTER_CONFIGS["basic_char_lang"]  
-else:
-    # basic filtering 
-    DEFAULT_CONFIG = OPUSFILTER_CONFIGS["basic"]
+
+use_char = False
+use_lang = False
+use_basic = False
 
 for part in parts:
     if "char" in part:
         char_filter_threshold = part.split("-")[1]
-        print(f"using threshold of {char_filter_threshold} for character script".)
+        print(f"using threshold of {char_filter_threshold} for character script.")
+        use_char = True
     elif "lang" in part:
         lang_filter_threshold = part.split("-")[1]
-        print(f"using threshold of {lang_filter_threshold} for language ID".)
+        print(f"using threshold of {lang_filter_threshold} for language ID.")
+        use_lang = True
+    else:
+        print("using basic filtering only.")
+        char_filter_threshold = None
+        lang_filter_threshold = None
+        use_basic = True
+
+# basic is a superset of char and lang filters and we always use char and lang filters together
+# but you could create your own default config and adjust this script accordingly.
+if use_char or use_lang:
+    DEFAULT_CONFIG = OPUSFILTER_CONFIGS["basic_char_lang"]
+elif use_basic:
+    DEFAULT_CONFIG = OPUSFILTER_CONFIGS["basic"]
 
 input_directory = os.path.dirname(file_in)
 file_name = os.path.basename(file_in)
@@ -119,6 +130,6 @@ rcmd = subprocess.call(cmd, shell=True)
 cmd=f"opusfilter {SPECIFIC_CONFIG}"
 rcmd = subprocess.call(cmd, shell=True)
 
-# copy the file to filtered-texts directory (as OpusFilter writes output to the same directory)
-cmd = f"cp {input_directory}/{file_name}-filtered {output_directory}/{file_name}-filtered"
+# move the file to filtered-texts directory (as OpusFilter writes output to the same directory)
+cmd = f"mv {input_directory}/{file_name}-filtered {output_directory}/{file_name}-filtered"
 rcmd = subprocess.call(cmd, shell=True)

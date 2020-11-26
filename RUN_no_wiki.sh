@@ -2,13 +2,14 @@
 
 # Pipeline driver script.
 
-if [ "$#" -ne 1 ]; then
-    echo "Usage: $0 LC" >&2
-    echo "    where LC is a two-character language code (e.g. \"en\")" >&2
+if [ "$#" -ne 2 ]; then
+    echo "Usage: $0 LC RUN" >&2
+    echo "    where LC is a two-character language code (e.g. \"en\") and RUN is the string which denotes the current run type." >&2
     exit 1
 fi
 
 LC="$1"
+RUN="$2"
 
 set -euo pipefail
 
@@ -35,7 +36,7 @@ for script in $(find "$SCRIPTDIR" -maxdepth 1 -name '[0-9]*.sh' | sort); do
         else
             echo $'\n'"---------- $br: RUNNING $bs ----------" >&2
             echo "           $(date)"$'\n' >&2
-            "$script" "$LC"
+            "$script" "$LC" "$RUN"
             echo $'\n'"---------- $br: COMPLETED $bs ----------" >&2
             echo "           $(date)"$'\n' >&2
     fi
@@ -43,3 +44,4 @@ done
 
 echo $'\n'"---------- $br: DONE ----------" >&2
 echo "           $(date)"$'\n' >&2
+

@@ -20,6 +20,7 @@ def argparser():
             'NCI',
             'NCI_old',
             'oscar',
+            'paracrawl',
         },
         nargs='+',
     )
@@ -31,6 +32,7 @@ def argparser():
             })
     parser.add_argument('--char-filter-threshold', type=str, help="filter threshold to apply for character script, e.g. 0.5")
     parser.add_argument('--lang-filter-threshold', type=str, help="filter threshold to apply for language ID, e.g. 0.5")
+    parser.add_argument('--no-wiki', default=False, action='store_true', help="Disable wiki-related scripts (only use external corpora)")
     parser.add_argument('--input-type', type=str,
         choices={
             'raw',
@@ -122,8 +124,13 @@ def main(argv):
                 print(f"copied {(copied_files / found_files) * 100}% of files for {corpus}")
 
         # launch script
-        run_script=f"/home/jbarry/spinning-storage/jbarry/ga_BERT/wiki-bert-pipeline/RUN.sh" # TODO don't use user-specific location
-        rcmd = subprocess.call(run_script + " ga" + " " + run_string, shell=True)
+        if args.no_wiki:
+            run_script = "RUN_no_wiki.sh"
+        else:
+            run_script = "RUN.sh"
+        
+        script=f"/home/jbarry/spinning-storage/jbarry/ga_BERT/wiki-bert-pipeline/{run_script}"
+        rcmd = subprocess.call(script + " ga" + " " + run_string, shell=True)
     else:
         print(f"Could not find Irish data directory, tried: {ga_data_dir}")
 

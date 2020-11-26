@@ -15,7 +15,7 @@ steps:
         - LengthFilter:
             unit: word
             min_length: 1
-            max_length: 100
+            max_length: 512
 
         - LongWordFilter:
             threshold: 40
