@@ -26,7 +26,7 @@ def argparser():
     )
     parser.add_argument('--filter-type', type=str,
         choices={
-            'none',
+            'None',
             'basic',
             'basic+char-@+lang-@',
             })
