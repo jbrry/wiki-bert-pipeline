@@ -4,7 +4,7 @@ from shutil import copyfile
 import subprocess
 from argparse import ArgumentParser
 import fileinput
-
+import pathlib
 
 def argparser():
     parser = ArgumentParser(
@@ -21,17 +21,20 @@ def argparser():
             'NCI_old',
             'oscar',
             'paracrawl',
+            'sampleNCI',
+            'twitter',
         },
         nargs='+',
     )
-    parser.add_argument('--filter-type', type=str,
+    parser.add_argument('--filter-type', type=str, help="The filter configuration to apply. You can also add your own \
+    but you will need to create a config file for it.",
         choices={
             'None',
             'basic',
             'basic+char-@+lang-@',
             })
-    parser.add_argument('--char-filter-threshold', type=str, help="filter threshold to apply for character script, e.g. 0.5")
-    parser.add_argument('--lang-filter-threshold', type=str, help="filter threshold to apply for language ID, e.g. 0.5")
+    parser.add_argument('--char-filter-threshold', type=str, help="Filter threshold to apply for character script, e.g. 0.5.")
+    parser.add_argument('--lang-filter-threshold', type=str, help="Filter threshold to apply for language ID threshold, e.g. 0.5.")
     parser.add_argument('--no-wiki', default=False, action='store_true', help="Disable wiki-related scripts (only use external corpora)")
     parser.add_argument('--input-type', type=str,
         choices={
@@ -47,22 +50,26 @@ def main(argv):
     corpora_string = "_".join(args.datasets)
 
     parts = args.filter_type.split("+")
-    print(parts)
+
     new_parts = []
     for part in parts:
         if "char" in part:
             if args.char_filter_threshold:
                 part = part.replace("@", args.char_filter_threshold)
                 new_parts.append(part)
+            else:
+                raise ValueError("Specified a character filter but no threshold supplied. Please use the --char-filter-threshold option")
+                
         elif "lang" in part:
             if args.lang_filter_threshold:
                 part = part.replace("@", args.lang_filter_threshold)
                 new_parts.append(part)
+            else:
+                raise ValueError("Specified a language filter but no threshold supplied. Please use the --lang-filter-threshold option")
         else:
             new_parts.append(part)
 
     filter_string = "+".join(new_parts)
-    print(filter_string)
 
     run_string = f'{corpora_string}_filtering_{filter_string}'
     print(f"copying data for run: {run_string}")
@@ -123,14 +130,15 @@ def main(argv):
 
                 print(f"copied {(copied_files / found_files) * 100}% of files for {corpus}")
 
-        # launch script
+        project_root_dir = pathlib.Path().absolute()
+        # specify pipeline launch script
         if args.no_wiki:
             run_script = "RUN_no_wiki.sh"
         else:
             run_script = "RUN.sh"
         
-        script=f"/home/jbarry/spinning-storage/jbarry/ga_BERT/wiki-bert-pipeline/{run_script}"
-        rcmd = subprocess.call(script + " ga" + " " + run_string, shell=True)
+        script=f"{project_root_dir}/{run_script}"
+        rcmd = subprocess.call(script + " " + "ga" + " " + run_string, shell=True)
     else:
         print(f"Could not find Irish data directory, tried: {ga_data_dir}")
 
