@@ -11,6 +11,7 @@ def argparser():
                     help='Whether to output pieces or ids (use `id` to output ids)')
     ap.add_argument('model', help='SentencePiece model')
     ap.add_argument('file', nargs='+')
+
     return ap
 
 
@@ -27,7 +28,7 @@ def sentencepiece_encode(sp_model, fn, output_format):
             if output_format == "piece":
                 print(" ".join(str(x) for x in sp_model.encode_as_pieces(l)))
             elif output_format == "id":
-                print(" ".join(str(x) for x in sp_model.encode_as_pieces(l)))
+                print(" ".join(str(x) for x in sp_model.encode_as_ids(l)))
 
 
 def main(argv):
