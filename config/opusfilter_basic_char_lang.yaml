@@ -16,6 +16,7 @@ steps:
             unit: word
             min_length: 1
             max_length: 512
+            pass_empty: true
 
         - LongWordFilter:
             threshold: 40
@@ -40,8 +41,10 @@ steps:
 
         - PunctuationFilter:
             threshold: 0.6
+            pass_empty: true
           module: customfilters
 
         - DigitsFilter:
             threshold: 0.6
+            pass_empty: true
           module: customfilters
