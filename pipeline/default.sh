@@ -53,7 +53,7 @@ EXTERNAL_CORPORA_DIR=""
 
 UDPIPE_MODEL_URL=$(get_language_attribute "$LC" "udpipe-model")
 UDPIPE_MODEL_DIR="$DATA_DIR/$LC/udpipe-model"
-UDPIPE_MODEL_PATH="$UDPIPE_MODEL_DIR/$(basename $UDPIPE_MODEL_URL)"
+UDPIPE_MODEL_PATH="$UDPIPE_MODEL_DIR/ga_en_combined.udpipe"
 
 TOKENIZER="$SCRIPT_DIR/udtokenize.py"
 TOKENIZED_TEXT_DIR="$DATA_DIR/$LC/tokenized-texts"
