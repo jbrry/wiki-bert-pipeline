@@ -33,6 +33,7 @@ def argparser():
             'None',
             'basic',
             'basic+char-@+lang-@',
+            'document-heuristic'
             })
     parser.add_argument('--char-filter-threshold', type=str, help="Filter threshold to apply for character script, e.g. 0.5.")
     parser.add_argument('--lang-filter-threshold', type=str, help="Filter threshold to apply for language ID threshold, e.g. 0.5.")
@@ -49,6 +50,9 @@ def argparser():
 def main(argv):
     args = argparser().parse_args(argv[1:])
     corpora_string = "_".join(args.datasets)
+
+    if not args.no_wiki:
+        corpora_string += "_wiki"
 
     parts = args.filter_type.split("+")
 
