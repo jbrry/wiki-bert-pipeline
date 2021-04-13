@@ -139,7 +139,7 @@ def main(argv):
                         copied_files += 1
 
                         # unzip the tokenized file so it is ready for filtering
-                        if corpus == "NCI":
+                        if corpus == "NCI" or corpus == "conll17":
                             subprocess.call(f'bzip2 -d {target_file}', shell=True)
 
                 print(f"copied {(copied_files / found_files) * 100}% of files for {corpus}")
