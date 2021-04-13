@@ -23,6 +23,7 @@ def argparser():
             'paracrawl',
             'sampleNCI',
             'twitter',
+            'test_punct',
         },
         nargs='+',
     )
@@ -117,7 +118,16 @@ def main(argv):
                 file_path = os.path.join(corpus, args.input_type)
                 data_path = os.path.join(ga_data_dir, file_path)
                 print(f"Copying Irish data from: {data_path}")
-                
+
+                # NCI and conll17 are already tokenised
+                if corpus == "NCI" or corpus == "conll17":
+                    target_data_path =  os.path.join('data', run_string, 'ga', 'tokenized-texts')
+                    if not os.path.exists(target_data_path):
+                        print(f"Creating directory at: {target_data_path}")
+                        os.makedirs(target_data_path)
+                else:
+                    target_data_path = os.path.join('data', run_string, 'ga', 'external-texts')
+
                 for f in os.listdir(data_path):
                     found_files += 1
                     # copy file to the target directory
@@ -127,6 +137,10 @@ def main(argv):
                         target_file = os.path.join(target_data_path, f)
                         copyfile(original_file, target_file)
                         copied_files += 1
+
+                        # unzip the tokenized file so it is ready for filtering
+                        if corpus == "NCI":
+                            subprocess.call(f'bzip2 -d {target_file}', shell=True)
 
                 print(f"copied {(copied_files / found_files) * 100}% of files for {corpus}")
 
