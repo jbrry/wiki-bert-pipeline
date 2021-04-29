@@ -27,7 +27,8 @@ def argparser():
         },
         nargs='+',
     )
-    parser.add_argument('--filter-type', type=str, help="The filter configuration to apply. You can also add your own \
+    parser.add_argument('--filter-type', type=str,
+    help="The filter configuration to apply. You can also add your own \
     but you will need to create a config file for it.",
         choices={
             'None',
@@ -35,9 +36,12 @@ def argparser():
             'basic+char-@+lang-@',
             'document-heuristic'
             })
-    parser.add_argument('--char-filter-threshold', type=str, help="Filter threshold to apply for character script, e.g. 0.5.")
-    parser.add_argument('--lang-filter-threshold', type=str, help="Filter threshold to apply for language ID threshold, e.g. 0.5.")
-    parser.add_argument('--no-wiki', default=False, action='store_true', help="Disable wiki-related scripts (only use external corpora)")
+    parser.add_argument('--char-filter-threshold', type=str,
+    help="Filter threshold to apply for character script, e.g. 0.5.")
+    parser.add_argument('--lang-filter-threshold', type=str,
+    help="Filter threshold to apply for language ID threshold, e.g. 0.5.")
+    parser.add_argument('--no-wiki', default=False, action='store_true',
+    help="Disable wiki-related scripts (only use external corpora)")
     parser.add_argument('--input-type', type=str,
         choices={
             'raw',
@@ -63,21 +67,23 @@ def main(argv):
                 part = part.replace("@", args.char_filter_threshold)
                 new_parts.append(part)
             else:
-                raise ValueError("Specified a character filter but no threshold supplied. Please use the --char-filter-threshold option")
+                raise ValueError("Specified a character filter but no threshold supplied."
+                                "Please use the --char-filter-threshold option")
                 
         elif "lang" in part:
             if args.lang_filter_threshold:
                 part = part.replace("@", args.lang_filter_threshold)
                 new_parts.append(part)
             else:
-                raise ValueError("Specified a language filter but no threshold supplied. Please use the --lang-filter-threshold option")
+                raise ValueError("Specified a language filter but no threshold supplied."
+                                "Please use the --lang-filter-threshold option")
         else:
             new_parts.append(part)
 
     filter_string = "+".join(new_parts)
 
     run_string = f'{corpora_string}_filtering_{filter_string}'
-    print(f"copying data for run: {run_string}")
+    print(f"Copying data for run: {run_string}")
 
     ga_data_dir = os.path.join('..', 'Irish-BERT/data/ga')
     target_data_path =  os.path.join('data', run_string, 'ga', 'external-texts')
@@ -88,26 +94,27 @@ def main(argv):
     data_path = f'DATA_DIR=$(pwd_relative_path "$BASE_DIR/data/{corpora_string}_filtering_{filter_string}")'
     external_path = f'EXTERNAL_CORPORA_DIR="$DATA_DIR/ga/external-texts"'
 
-    # take the default config file and alter it based on the specific data/filtering type.
-    # this is necessary because it means environment paths won't change if the pipeline is being run for multiple configurations simultaneously.
+    # Take the default config file and alter it based on the specific data/filtering type.
+    # This is necessary because it means environment paths won't change if the pipeline is being run
+    # for multiple configurations simultaneously.
     DEFAULT_CONFIG="pipeline/default.sh"
     SPECIFIC_CONFIG=f"pipeline/common_{run_string}.sh"
     print(f"creating config: {SPECIFIC_CONFIG}")
     copyfile(DEFAULT_CONFIG, SPECIFIC_CONFIG)
 
-    # change default environment paths
+    # Change default environment paths
     for line in fileinput.input(SPECIFIC_CONFIG, inplace=1):
         new_line_symbol = line.rfind('\n')
         line = line[:new_line_symbol]
-        # replace placeholder data dir with run-specific data dir
+        # Replace placeholder data dir with run-specific data dir
         if line == 'DATA_DIR=$(pwd_relative_path "$BASE_DIR/data")':
             line = line.replace(line, data_path)
             print(line)
-        # set external corpora dir based on new data dir
+        # Set external corpora dir based on new data dir
         elif line == 'EXTERNAL_CORPORA_DIR=""':
             line = line.replace(line, external_path)
             print(line)
-        # keep line unchanged
+        # Keep line unchanged
         else:
             print(line)
 
@@ -123,7 +130,7 @@ def main(argv):
                 data_path = os.path.join(ga_data_dir, file_path)
                 print(f"Copying Irish data from: {data_path}")
 
-                # NCI and conll17 are already tokenised
+                # NCI and conll17 are already tokenised so we place them in 'tokenized-texts'
                 if corpus == "NCI" or corpus == "conll17":
                     target_data_path =  os.path.join('data', run_string, 'ga', 'tokenized-texts')
                     if not os.path.exists(target_data_path):
@@ -145,8 +152,6 @@ def main(argv):
                         # unzip the tokenized file so it is ready for filtering
                         if corpus == "NCI" or corpus == "conll17":
                             subprocess.call(f'bzip2 -d {target_file}', shell=True)
-                            # remove .bz2 file
-                            subprocess.call(f'rm {target_file}', shell=True)
 
                 print(f"copied {(copied_files / found_files) * 100}% of files for {corpus}")
 
