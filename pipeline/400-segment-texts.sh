@@ -9,6 +9,8 @@ source "$PIPELINE_DIR/common_$RUN.sh"
 
 count=$(find "$EXTERNAL_CORPORA_DIR" -type f | wc -l | perl -pe 's/\s//g')
 
+echo "pass"
+
 if [ $count -eq 0 ]; then
     error_exit "no files in $EXTERNAL_CORPORA_DIR"
 else
@@ -23,10 +25,9 @@ find "$EXTERNAL_CORPORA_DIR" -type f | sort | while read f; do
     outpath=$(pwd_relative_path "$outdir/$outbase")
     mkdir -p "$outdir"
     if [ -s "$outpath" ]; then
-	echo "$SCRIPT: $outpath exists, skipping $f ." >&2
+    	echo "$SCRIPT: $outpath exists, skipping $f ." >&2
     else
 	echo "$SCRIPT: tokenizing $f to $outpath ..." >&2
-	python3 "$TOKENIZER" "$UDPIPE_MODEL_PATH" "$f" \
-		> "$outpath"
+	python3 "$TOKENIZER" "$UDPIPE_MODEL_PATH" "$f" > "$outpath"
     fi
 done

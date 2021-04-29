@@ -8,7 +8,7 @@ RUN=$2
 source "$PIPELINE_DIR/common_$RUN.sh"
 
 # add customfilters to Python path
-export PYTHONPATH=/home/jbarry/spinning-storage/jbarry/ga_BERT/Irish-BERT/filters/
+export PYTHONPATH=/home/$USER/spinning-storage/$USER/ga_BERT/Irish-BERT/filters/
 
 count=$(find "$TOKENIZED_TEXT_DIR" -type f | wc -l | perl -pe 's/\s//g')
 

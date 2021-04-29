@@ -13,6 +13,7 @@ if [ -s "$UDPIPE_MODEL_PATH" ]; then
     echo "$SCRIPT: $UDPIPE_MODEL_PATH exists, skipping download." >&2
     exit 0
 else
-    echo "$SCRIPT: downloading $UDPIPE_MODEL_URL to $UDPIPE_MODEL_PATH ..." >&2
-    wget -O "$UDPIPE_MODEL_PATH" "$UDPIPE_MODEL_URL"
+    echo "$SCRIPT: downloading UDPipe model to $UDPIPE_MODEL_PATH ..." >&2
+    #wget -O "$UDPIPE_MODEL_PATH" "$UDPIPE_MODEL_URL"
+    rclone copy "gdrive:Theme A DCU/Irish_Data/UDPipe_Model/" "$UDPIPE_MODEL_DIR"
 fi    
