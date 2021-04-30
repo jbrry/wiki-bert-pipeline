@@ -109,6 +109,8 @@ if use_basic and use_char and use_lang:
     default_config = OPUSFILTER_CONFIGS["basic_char_lang"]
 elif not use_char and not use_lang and use_basic:
     default_config = OPUSFILTER_CONFIGS["basic"]
+    char_filter_threshold = None
+    lang_filter_threshold = None
 elif not use_basic and not use_char and not use_lang:
     skip_filtering = True
 
