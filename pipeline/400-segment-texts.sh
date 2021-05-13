@@ -9,8 +9,6 @@ source "$PIPELINE_DIR/common_$RUN.sh"
 
 count=$(find "$EXTERNAL_CORPORA_DIR" -type f | wc -l | perl -pe 's/\s//g')
 
-echo "pass"
-
 if [ $count -eq 0 ]; then
     error_exit "no files in $EXTERNAL_CORPORA_DIR"
 else

@@ -25,7 +25,7 @@ DOC_END_TAG_RE = re.compile(r'^</doc>$')
 def argparser():
     from argparse import ArgumentParser
     ap = ArgumentParser()
-    ap.add_argument('-b', '--keep-blank', default=False, action='store_true',
+    ap.add_argument('-b', '--keep-blank', default=True, action='store_true',
                     help='Include blank lines in output')
     ap.add_argument('-d', '--document-tags', default=False, action='store_true',
                     help='Include document start/end tags in output')

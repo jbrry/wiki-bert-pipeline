@@ -4,23 +4,25 @@
 
 PIPELINE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 RUN=$2
+
 source "$PIPELINE_DIR/common_$RUN.sh"
 
-if [ ! -s "$SAMPLED_TEXT_PATH" ]; then
+if [ ! -s "$TOKENIZED_SAMPLE_PATH" ]; then
     error_exit "$TOKENIZED_SAMPLE_PATH does not exist"
 fi
 
-mkdir -p "$HUGGINGFACE_TOKENIZER_MODEL_DIR"
 
-if [ -s "$HUGGINGFACE_TOKENIZER_MODEL_PATH/vocab.txt" ]; then
-    echo "$SCRIPT: $HUGGINGFACE_TOKENIZER_MODEL_PATH.vocab exists, not recreating." >&2
+mkdir -p "$SENTENCEPIECE_MODEL_DIR"
+
+if [ -s "$SENTENCEPIECE_MODEL_PATH.vocab" ]; then
+    echo "$SCRIPT: $SENTENCEPIECE_MODEL_PATH.vocab exists, not recreating." >&2
     exit 0
 else
-    params="
-    $SAMPLED_TEXT_PATH
-    --outdir=$HUGGINGFACE_TOKENIZER_MODEL_PATH
-    --number_unused=100"
-    echo "$SCRIPT: running $HUGGINGFACE_TOKENIZER" $params >&2
-    python3 "$HUGGINGFACE_TOKENIZER" $params
+	params="
+	--input=$TOKENIZED_SAMPLE_PATH
+	--model_prefix=$SENTENCEPIECE_MODEL_PATH
+	$SENTENCEPIECE_PARAMS"
+	echo "$SCRIPT: running $SENTENCEPIECE" $params >&2
+	python3 "$SENTENCEPIECE" $params
 fi
 

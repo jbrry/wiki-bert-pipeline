@@ -140,6 +140,6 @@ if not skip_filtering:
     rcmd = subprocess.call(cmd, shell=True)
 else:
     print("Skipping filtering step.")
-    # move the file to filtered-texts directory (as OpusFilter writes output to the same directory as the input file)
-    cmd = f"mv {input_directory}/{file_name} {output_directory}/{file_name}"
+    # copy the file to filtered-texts directory (as OpusFilter writes output to the same directory as the input file)
+    cmd = f"cp {input_directory}/{file_name} {output_directory}/{file_name}"
     rcmd = subprocess.call(cmd, shell=True)

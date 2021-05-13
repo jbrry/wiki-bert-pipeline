@@ -8,6 +8,7 @@ source "$PIPELINE_DIR/common_$RUN.sh"
 
 mkdir -p "$MD5SUM_DIR"
 
+# bert
 outpath="$MD5SUM_DIR/tfrecords-128.md5sum"
 if [ -s "$outpath" ]; then
     echo "$SCRIPT: $outpath exists, skipping." >&2
@@ -25,3 +26,24 @@ else
     find "$TFRECORD_DIR_512" -name '*.tfrecord' | \
 	xargs md5sum > "$outpath"
 fi
+
+# electra
+outpath="$MD5SUM_DIR/electra-tfrecords-128.md5sum"
+if [ -s "$outpath" ]; then
+    echo "$SCRIPT: $outpath exists, skipping." >&2
+else
+    echo "$SCRIPT: computing md5sums for files in $ELECTRA_TFRECORD_DIR_128 with output to $outpath ." >&2
+    find "$ELECTRA_TFRECORD_DIR_128" -name '*.tfrecord' | \
+	xargs md5sum > "$outpath"
+fi
+
+outpath="$MD5SUM_DIR/electra-tfrecords-512.md5sum"
+if [ -s "$outpath" ]; then
+    echo "$SCRIPT: $outpath exists, skipping." >&2
+else
+    echo "$SCRIPT: computing md5sums for files in $ELECTRA_TFRECORD_DIR_512 with output to $outpath ." >&2
+    find "$ELECTRA_TFRECORD_DIR_512" -name '*.tfrecord' | \
+	xargs md5sum > "$outpath"
+fi
+
+

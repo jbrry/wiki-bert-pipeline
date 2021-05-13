@@ -17,8 +17,7 @@ else
     echo "$SCRIPT: processing $count files in $DOC_FILTERED_DIR"
 fi
 
-#or seq_len in 128 512; do
-for seq_len in 128; do
+for seq_len in 128 512; do
     find "$DOC_FILTERED_DIR" -type f | sort | while read f; do
 	relpath=$(relative_path "$f" "$DOC_FILTERED_DIR")
 	reldir=$(dirname "$relpath")

@@ -41,6 +41,7 @@ find "$TOKENIZED_TEXT_DIR" -type f | sort | while read f; do
             echo "$SCRIPT: running $DOC_FILTER" $DOC_FILTER_PARAMS >&2
             python3 "$DOC_FILTER" $DOC_FILTER_PARAMS "$f" > "$outpath"
         # OpusFilter
+        # if filtering = None, $OPUSFILTER_WRAPPER will skip filtering and copy the file to filtered-texts
         else
             echo "$SCRIPT: running $OPUSFILTER_WRAPPER" $FILTER_TYPE $f >&2
             mkdir -p $OPUSFILTER_CONFIG_DIR
